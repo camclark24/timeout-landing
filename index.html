@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GambleGuard — Take back control</title>
-<meta name="description" content="GambleGuard blocks gambling sites with a server-enforced cooldown. Delete the app — blocking stays on. Available for iOS, Android, Mac, Windows, and Chrome.">
+<title>Timeout.bet — Call a timeout.</title>
+<meta name="description" content="Timeout.bet blocks gambling sites with a server-enforced cooldown. Bet on yourself. Available for Chrome now, iOS and Android coming soon.">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -14,6 +14,7 @@
     --line: #e5e5e5;
     --bg: #fafaf8;
     --green: #1a5c1a;
+    --green-mid: #2d8a2d;
     --green-light: #f0f7f0;
     --white: #ffffff;
     --serif: 'Instrument Serif', Georgia, serif;
@@ -21,9 +22,7 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
   body {
     font-family: var(--sans);
     background: var(--bg);
@@ -32,9 +31,8 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── ANIMATIONS ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   .fade-up { animation: fadeUp 0.7s ease forwards; opacity: 0; }
@@ -46,309 +44,184 @@
 
   /* ── NAV ── */
   nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     padding: 20px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(250,250,248,0.85);
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(250,250,248,0.88);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
   }
   .nav-logo {
     font-family: var(--serif);
-    font-size: 20px;
-    color: var(--ink);
-    text-decoration: none;
-    letter-spacing: -0.3px;
+    font-size: 20px; color: var(--ink);
+    text-decoration: none; letter-spacing: -0.3px;
   }
   .nav-logo span { color: var(--green); }
   .nav-right { display: flex; align-items: center; gap: 32px; }
-  .nav-link {
-    font-size: 14px;
-    color: var(--ink-3);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
+  .nav-link { font-size: 14px; color: var(--ink-3); text-decoration: none; transition: color 0.2s; }
   .nav-link:hover { color: var(--ink); }
   .nav-cta {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--white);
-    background: var(--green);
-    padding: 9px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: opacity 0.2s;
+    font-size: 14px; font-weight: 500; color: var(--white);
+    background: var(--green); padding: 9px 20px; border-radius: 8px;
+    text-decoration: none; transition: opacity 0.2s;
   }
   .nav-cta:hover { opacity: 0.85; }
 
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 120px 48px 80px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 48px 80px; text-align: center;
+    position: relative; overflow: hidden;
   }
   .hero::before {
     content: '';
     position: absolute;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(26,92,26,0.06) 0%, transparent 70%);
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,92,26,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
     pointer-events: none;
   }
-  .hero-inner { max-width: 720px; position: relative; }
+  .hero-inner { max-width: 740px; position: relative; }
   .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--green-light);
-    color: var(--green);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border-radius: 20px;
-    margin-bottom: 32px;
-    letter-spacing: 0.3px;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-light); color: var(--green);
+    font-size: 12px; font-weight: 500;
+    padding: 6px 14px; border-radius: 20px;
+    margin-bottom: 32px; letter-spacing: 0.3px;
   }
   .badge-dot {
     width: 6px; height: 6px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse-dot 2s ease-in-out infinite;
+    background: var(--green); border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
   }
-  @keyframes pulse-dot {
-    0%,100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
   .hero-title {
     font-family: var(--serif);
-    font-size: clamp(48px, 7vw, 88px);
-    line-height: 1.0;
-    letter-spacing: -1px;
-    color: var(--ink);
-    margin-bottom: 28px;
+    font-size: clamp(52px, 7.5vw, 96px);
+    line-height: 1.0; letter-spacing: -1.5px;
+    color: var(--ink); margin-bottom: 28px;
   }
-  .hero-title em {
-    font-style: italic;
-    color: var(--green);
-  }
+  .hero-title em { font-style: italic; color: var(--green); }
+
   .hero-sub {
-    font-size: 18px;
-    color: var(--ink-2);
-    line-height: 1.7;
-    max-width: 520px;
-    margin: 0 auto 48px;
-    font-weight: 300;
+    font-size: 19px; color: var(--ink-2);
+    line-height: 1.7; max-width: 520px;
+    margin: 0 auto 48px; font-weight: 300;
   }
 
-  /* ── EMAIL FORM ── */
+  /* ── FORM ── */
   .form-wrap {
-    display: flex;
-    gap: 10px;
-    max-width: 440px;
-    margin: 0 auto 20px;
+    display: flex; gap: 10px;
+    max-width: 440px; margin: 0 auto 16px;
   }
   .email-input {
-    flex: 1;
-    padding: 14px 18px;
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    background: var(--white);
-    font-family: var(--sans);
-    font-size: 15px;
-    color: var(--ink);
-    outline: none;
+    flex: 1; padding: 14px 18px;
+    border: 1.5px solid var(--line); border-radius: 10px;
+    background: var(--white); font-family: var(--sans);
+    font-size: 15px; color: var(--ink); outline: none;
     transition: border-color 0.2s;
   }
   .email-input:focus { border-color: var(--green); }
   .email-input::placeholder { color: #bbb; }
   .submit-btn {
-    padding: 14px 24px;
-    background: var(--green);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: var(--sans);
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
+    padding: 14px 24px; background: var(--green);
+    color: white; border: none; border-radius: 10px;
+    font-family: var(--sans); font-size: 15px; font-weight: 500;
+    cursor: pointer; white-space: nowrap;
     transition: opacity 0.2s, transform 0.1s;
   }
   .submit-btn:hover { opacity: 0.88; }
   .submit-btn:active { transform: scale(0.98); }
-  .form-note {
-    font-size: 13px;
-    color: var(--ink-3);
-  }
+  .form-note { font-size: 13px; color: var(--ink-3); }
   .success-msg {
-    display: none;
-    background: var(--green-light);
-    color: var(--green);
-    padding: 14px 20px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 500;
-    max-width: 440px;
-    margin: 0 auto;
+    display: none; background: var(--green-light); color: var(--green);
+    padding: 14px 20px; border-radius: 10px;
+    font-size: 15px; font-weight: 500;
+    max-width: 440px; margin: 0 auto 16px;
   }
 
   /* ── EXTENSION BANNER ── */
   .ext-banner {
-    margin: 40px auto 0;
-    max-width: 440px;
-    background: var(--white);
-    border: 1.5px solid var(--line);
-    border-radius: 14px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    margin: 36px auto 0; max-width: 440px;
+    background: var(--white); border: 1.5px solid var(--line);
+    border-radius: 14px; padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
   }
   .ext-left { display: flex; align-items: center; gap: 12px; }
   .ext-icon {
     width: 38px; height: 38px;
     background: linear-gradient(135deg, #1a5c1a, #2d8a2d);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .ext-text-title { font-size: 14px; font-weight: 500; color: var(--ink); }
   .ext-text-sub { font-size: 12px; color: var(--ink-3); margin-top: 1px; }
   .ext-download {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--green);
-    text-decoration: none;
-    white-space: nowrap;
-    padding: 7px 14px;
-    border: 1.5px solid var(--green);
-    border-radius: 8px;
-    transition: background 0.2s, color 0.2s;
-    flex-shrink: 0;
+    font-size: 13px; font-weight: 500; color: var(--green);
+    text-decoration: none; white-space: nowrap;
+    padding: 7px 14px; border: 1.5px solid var(--green);
+    border-radius: 8px; transition: background 0.2s, color 0.2s; flex-shrink: 0;
   }
   .ext-download:hover { background: var(--green); color: white; }
 
   /* ── DIVIDER ── */
-  .divider {
-    height: 1px;
-    background: var(--line);
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  .divider { height: 1px; background: var(--line); max-width: 1100px; margin: 0 auto; }
 
-  /* ── HOW IT WORKS ── */
-  .section {
-    padding: 100px 48px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  /* ── SECTIONS ── */
+  .section { padding: 100px 48px; max-width: 1100px; margin: 0 auto; }
   .section-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    margin-bottom: 16px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 16px;
   }
   .section-title {
     font-family: var(--serif);
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.1;
-    letter-spacing: -0.5px;
-    color: var(--ink);
-    margin-bottom: 64px;
-    max-width: 560px;
+    font-size: clamp(32px, 4vw, 54px);
+    line-height: 1.1; letter-spacing: -0.5px;
+    color: var(--ink); margin-bottom: 64px; max-width: 560px;
   }
   .section-title em { font-style: italic; color: var(--green); }
 
+  /* ── HOW IT WORKS ── */
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
-  .step-num {
-    font-family: var(--serif);
-    font-size: 48px;
-    color: var(--line);
-    line-height: 1;
-    margin-bottom: 16px;
-  }
+  .step-num { font-family: var(--serif); font-size: 48px; color: var(--line); line-height: 1; margin-bottom: 16px; }
   .step-title { font-size: 17px; font-weight: 500; color: var(--ink); margin-bottom: 10px; }
   .step-body { font-size: 15px; color: var(--ink-2); line-height: 1.7; font-weight: 300; }
 
-  /* ── DIFFERENTIATOR ── */
-  .diff-section {
-    padding: 100px 48px;
-    background: var(--ink);
-    color: var(--white);
+  /* ── DARK SECTION ── */
+  .dark-section { padding: 100px 48px; background: var(--ink); color: var(--white); }
+  .dark-inner { max-width: 1100px; margin: 0 auto; }
+  .dark-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 2.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px;
   }
-  .diff-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .diff-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 16px;
-  }
-  .diff-title {
+  .dark-title {
     font-family: var(--serif);
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.1;
-    letter-spacing: -0.5px;
-    margin-bottom: 64px;
-    max-width: 600px;
+    font-size: clamp(32px, 4vw, 54px);
+    line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 64px; max-width: 620px;
   }
-  .diff-title em { font-style: italic; color: #7aba7a; }
-  .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-  .diff-card {
-    background: rgba(255,255,255,0.04);
-    padding: 36px;
+  .dark-title em { font-style: italic; color: #7aba7a; }
+  .dark-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .dark-card {
+    background: rgba(255,255,255,0.04); padding: 36px;
     transition: background 0.2s;
   }
-  .diff-card:hover { background: rgba(255,255,255,0.07); }
-  .diff-card-icon { font-size: 28px; margin-bottom: 16px; }
-  .diff-card-title { font-size: 17px; font-weight: 500; margin-bottom: 10px; }
-  .diff-card-body { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.7; font-weight: 300; }
+  .dark-card:hover { background: rgba(255,255,255,0.07); }
+  .dark-card-icon { font-size: 28px; margin-bottom: 16px; }
+  .dark-card-title { font-size: 17px; font-weight: 500; margin-bottom: 10px; }
+  .dark-card-body { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.7; font-weight: 300; }
 
   /* ── COMPARISON ── */
-  .compare-section {
-    padding: 100px 48px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
-    margin-top: 48px;
-  }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 48px; }
   .compare-table th {
-    text-align: left;
-    padding: 14px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-3);
-    border-bottom: 1px solid var(--line);
-    letter-spacing: 0.3px;
+    text-align: left; padding: 14px 20px;
+    font-size: 13px; font-weight: 500; color: var(--ink-3);
+    border-bottom: 1px solid var(--line); letter-spacing: 0.3px;
   }
   .compare-table th.gg { color: var(--green); }
-  .compare-table td {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--line);
-    color: var(--ink-2);
-    font-weight: 300;
-  }
+  .compare-table td { padding: 16px 20px; border-bottom: 1px solid var(--line); color: var(--ink-2); font-weight: 300; }
   .compare-table td.feature { font-weight: 400; color: var(--ink); }
   .compare-table td.gg { font-weight: 500; color: var(--green); }
   .compare-table tr:last-child td { border-bottom: none; }
@@ -357,78 +230,63 @@
   .cross { color: #ccc; }
 
   /* ── PLATFORMS ── */
-  .platforms-section {
-    padding: 80px 48px;
-    background: var(--green-light);
-  }
+  .platforms-section { padding: 80px 48px; background: var(--green-light); }
   .platforms-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 48px;
-    flex-wrap: wrap;
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 48px; flex-wrap: wrap;
   }
   .platforms-left { max-width: 440px; }
-  .platforms-title {
-    font-family: var(--serif);
-    font-size: 36px;
-    line-height: 1.15;
-    letter-spacing: -0.3px;
-    margin-bottom: 16px;
-  }
+  .platforms-title { font-family: var(--serif); font-size: 36px; line-height: 1.15; letter-spacing: -0.3px; margin-bottom: 16px; }
   .platforms-sub { font-size: 16px; color: var(--ink-2); font-weight: 300; line-height: 1.7; }
-  .platforms-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
+  .platforms-grid { display: flex; flex-wrap: wrap; gap: 10px; }
   .platform-pill {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 10px 18px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    background: white; border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 18px; font-size: 14px; font-weight: 500; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
   }
 
+  /* ── PRICING ── */
+  .pricing-section { padding: 100px 48px; max-width: 1100px; margin: 0 auto; }
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 760px; }
+  .pricing-card {
+    background: var(--white); border: 1.5px solid var(--line);
+    border-radius: 16px; padding: 36px;
+  }
+  .pricing-card.featured { border-color: var(--green); background: var(--green-light); }
+  .pricing-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--green); margin-bottom: 16px;
+  }
+  .pricing-name { font-family: var(--serif); font-size: 28px; margin-bottom: 8px; }
+  .pricing-price { font-size: 42px; font-weight: 300; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+  .pricing-price span { font-size: 16px; color: var(--ink-3); }
+  .pricing-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 28px; }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .pricing-features li { font-size: 14px; color: var(--ink-2); display: flex; align-items: center; gap: 10px; }
+  .pricing-features li::before { content: '✓'; color: var(--green); font-weight: 600; flex-shrink: 0; }
+  .pricing-btn {
+    display: block; width: 100%; margin-top: 28px;
+    padding: 13px; border-radius: 10px; border: none;
+    font-family: var(--sans); font-size: 15px; font-weight: 500;
+    cursor: pointer; text-align: center; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .pricing-btn:hover { opacity: 0.85; }
+  .pricing-btn.free { background: var(--white); color: var(--green); border: 1.5px solid var(--green); }
+  .pricing-btn.premium { background: var(--green); color: white; }
+
   /* ── FINAL CTA ── */
-  .final-cta {
-    padding: 120px 48px;
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  .final-title {
-    font-family: var(--serif);
-    font-size: clamp(40px, 5vw, 64px);
-    line-height: 1.05;
-    letter-spacing: -0.5px;
-    margin-bottom: 24px;
-  }
+  .final-cta { padding: 120px 48px; text-align: center; max-width: 700px; margin: 0 auto; }
+  .final-title { font-family: var(--serif); font-size: clamp(40px, 5vw, 68px); line-height: 1.05; letter-spacing: -0.5px; margin-bottom: 24px; }
   .final-title em { font-style: italic; color: var(--green); }
-  .final-sub {
-    font-size: 17px;
-    color: var(--ink-2);
-    font-weight: 300;
-    line-height: 1.7;
-    margin-bottom: 48px;
-  }
+  .final-sub { font-size: 17px; color: var(--ink-2); font-weight: 300; line-height: 1.7; margin-bottom: 48px; }
 
   /* ── FOOTER ── */
   footer {
-    border-top: 1px solid var(--line);
-    padding: 32px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    color: var(--ink-3);
+    border-top: 1px solid var(--line); padding: 32px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; color: var(--ink-3);
   }
   .footer-logo { font-family: var(--serif); font-size: 16px; color: var(--ink); }
   .footer-logo span { color: var(--green); }
@@ -441,15 +299,15 @@
     .form-wrap { flex-direction: column; }
     .section { padding: 64px 24px; }
     .steps { grid-template-columns: 1fr; gap: 40px; }
-    .diff-section { padding: 64px 24px; }
-    .diff-grid { grid-template-columns: 1fr; }
-    .compare-section { padding: 64px 24px; overflow-x: auto; }
+    .dark-section { padding: 64px 24px; }
+    .dark-grid { grid-template-columns: 1fr; }
     .platforms-section { padding: 64px 24px; }
     .platforms-inner { flex-direction: column; }
+    .pricing-section { padding: 64px 24px; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
     .final-cta { padding: 80px 24px; }
     footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
     .ext-banner { flex-direction: column; text-align: center; }
-    .ext-left { flex-direction: column; }
   }
 </style>
 </head>
@@ -457,10 +315,10 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">Gamble<span>Guard</span></a>
+  <a href="#" class="nav-logo">Timeout<span>.bet</span></a>
   <div class="nav-right">
     <a href="#how" class="nav-link">How it works</a>
-    <a href="#compare" class="nav-link">vs. competitors</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
     <a href="#waitlist" class="nav-cta">Join waitlist</a>
   </div>
 </nav>
@@ -470,24 +328,22 @@
   <div class="hero-inner">
     <div class="hero-badge fade-up delay-1">
       <div class="badge-dot"></div>
-      Server-enforced blocking — now in beta
+      Chrome extension available now — iOS & Android coming soon
     </div>
     <h1 class="hero-title fade-up delay-2">
-      The blocker that<br>works <em>even when<br>you don't.</em>
+      You don't have<br>to quit. Just <em>pause.</em>
     </h1>
     <p class="hero-sub fade-up delay-3">
-      GambleGuard blocks gambling sites across every device. Delete the app — blocking stays on. Our server-enforced cooldown means your past self protects your future self.
+      Timeout blocks gambling sites with a server-enforced cooldown. Delete the app — blocking stays on. Because the best version of you set this up for a reason.
     </p>
 
     <div id="waitlist" class="fade-up delay-4">
-      <div class="form-wrap">
-        <input class="email-input" type="email" id="email-input" placeholder="your@email.com">
-        <button class="submit-btn" onclick="joinWaitlist()">Join waitlist</button>
+      <div class="form-wrap" id="form-1">
+        <input class="email-input" type="email" id="email-1" placeholder="your@email.com">
+        <button class="submit-btn" onclick="joinWaitlist('email-1','success-1','form-1')">Join waitlist</button>
       </div>
-      <div class="success-msg" id="success-msg">
-        ✓ You're on the list. We'll be in touch soon.
-      </div>
-      <p class="form-note">No spam. Just a heads up when mobile apps launch.</p>
+      <div class="success-msg" id="success-1">✓ You're on the list. We'll reach out when mobile launches.</div>
+      <p class="form-note">No spam. Just a heads up when iOS & Android launch.</p>
     </div>
 
     <div class="ext-banner fade-up delay-5">
@@ -499,11 +355,11 @@
           </svg>
         </div>
         <div>
-          <div class="ext-text-title">Chrome Extension — available now</div>
-          <div class="ext-text-sub">Blocks 70+ domains. Works immediately.</div>
+          <div class="ext-text-title">Chrome Extension — free, available now</div>
+          <div class="ext-text-sub">Blocks 70+ domains. Install in 2 minutes.</div>
         </div>
       </div>
-      <a href="https://github.com/camclark24/gambleguard-api" class="ext-download" target="_blank">Download free →</a>
+      <a href="#" class="ext-download">Download free →</a>
     </div>
   </div>
 </section>
@@ -513,67 +369,67 @@
 <!-- HOW IT WORKS -->
 <section class="section" id="how">
   <div class="section-label">How it works</div>
-  <div class="section-title">Built for the moments<br>when <em>willpower isn't enough.</em></div>
+  <div class="section-title">Built for the moment<br>the urge hits <em>hardest.</em></div>
   <div class="steps">
     <div class="step">
       <div class="step-num">01</div>
-      <div class="step-title">Install and activate</div>
-      <div class="step-body">Set up takes under three minutes. Choose your cooldown period — we recommend 48 hours. Blocking activates immediately across all your devices.</div>
+      <div class="step-title">Call a timeout</div>
+      <div class="step-body">Install Timeout and set your cooldown — we recommend 48 hours. Blocking activates immediately across all your devices. No account required to start.</div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
-      <div class="step-title">Blocked sites redirect</div>
-      <div class="step-body">Every gambling site, crypto exchange, and prediction market redirects to a calm, supportive page. No judgment — just a pause.</div>
+      <div class="step-title">Every site redirects</div>
+      <div class="step-body">Gambling sites, crypto exchanges, prediction markets — every one redirects to a calm page. Not a lecture. Just a reminder that you called this timeout for a reason.</div>
     </div>
     <div class="step">
       <div class="step-num">03</div>
-      <div class="step-title">Cooldown protects you</div>
-      <div class="step-body">Want to disable blocking? A server-enforced cooldown starts. Blocking stays fully active during that time — and you can cancel any time.</div>
+      <div class="step-title">The server holds the line</div>
+      <div class="step-body">Want to end your timeout early? A server-enforced cooldown starts. Blocking stays fully on. Delete the app — the timer keeps running. You can cancel any time.</div>
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- DIFFERENTIATOR -->
-<section class="diff-section">
-  <div class="diff-inner">
-    <div class="diff-label">Why GambleGuard is different</div>
-    <div class="diff-title">The only blocker where<br><em>deleting the app</em><br>doesn't turn it off.</div>
-    <div class="diff-grid">
-      <div class="diff-card">
-        <div class="diff-card-icon">☁️</div>
-        <div class="diff-card-title">Server-side enforcement</div>
-        <div class="diff-card-body">Your blocking state lives on our servers. Uninstall the app, clear your cache, factory reset your phone — the cooldown timer keeps running.</div>
+<!-- WHY DIFFERENT -->
+<section class="dark-section">
+  <div class="dark-inner">
+    <div class="dark-label">Why Timeout is different</div>
+    <div class="dark-title">Every other blocker turns off<br>the moment you <em>want it to.</em></div>
+    <div class="dark-grid">
+      <div class="dark-card">
+        <div class="dark-card-icon">☁️</div>
+        <div class="dark-card-title">Server-side enforcement</div>
+        <div class="dark-card-body">Your timeout lives on our servers — not your device. Uninstall, factory reset, new phone — the cooldown timer keeps running until it's done.</div>
       </div>
-      <div class="diff-card">
-        <div class="diff-card-icon">⏱️</div>
-        <div class="diff-card-title">Cooldown that can't be cheated</div>
-        <div class="diff-card-body">The timer is validated server-side. Changing your device clock does nothing. Only real time passing unlocks the ability to disable blocking.</div>
+      <div class="dark-card">
+        <div class="dark-card-icon">⏱️</div>
+        <div class="dark-card-title">A cooldown that can't be cheated</div>
+        <div class="dark-card-body">Changing your device clock does nothing. Only real time passing ends a timeout. Your past self made this decision — and it sticks.</div>
       </div>
-      <div class="diff-card">
-        <div class="diff-card-icon">📱</div>
-        <div class="diff-card-title">Every platform, one account</div>
-        <div class="diff-card-body">iOS, Android, Mac, Windows, and all major browsers — one account protects everything. Block on mobile, stay blocked on desktop.</div>
+      <div class="dark-card">
+        <div class="dark-card-icon">📱</div>
+        <div class="dark-card-title">Every platform, one account</div>
+        <div class="dark-card-body">iOS, Android, Mac, Windows, Chrome — one timeout covers everything. Block on mobile, stay blocked on desktop. No gaps.</div>
       </div>
-      <div class="diff-card">
-        <div class="diff-card-icon">📊</div>
-        <div class="diff-card-title">Urge pattern analytics</div>
-        <div class="diff-card-body">See when your urges peak. Thursday nights at 9pm? Now you know. Data-driven self-awareness that no other blocker offers.</div>
+      <div class="dark-card">
+        <div class="dark-card-icon">📊</div>
+        <div class="dark-card-title">Urge pattern insights</div>
+        <div class="dark-card-body">See when your urges peak. Thursday at 9pm? Now you know — and you can plan around it. Awareness is the first step.</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- COMPARISON -->
-<section class="compare-section" id="compare">
+<section class="section" id="compare">
   <div class="section-label">vs. the competition</div>
-  <div class="section-title">Most blockers can be turned off<br>in <em>under a minute.</em></div>
+  <div class="section-title">Most blockers can be bypassed<br>in <em>under 60 seconds.</em></div>
   <table class="compare-table">
     <thead>
       <tr>
         <th>Feature</th>
-        <th class="gg">GambleGuard</th>
+        <th class="gg">Timeout.bet</th>
         <th>Gamban</th>
         <th>BetBlocker</th>
         <th>Freedom</th>
@@ -581,7 +437,7 @@
     </thead>
     <tbody>
       <tr>
-        <td class="feature">Server-side cooldown</td>
+        <td class="feature">Server-enforced cooldown</td>
         <td class="gg check">✓ Yes</td>
         <td class="cross">✗ No</td>
         <td class="cross">✗ No</td>
@@ -595,7 +451,7 @@
         <td class="cross">✗ No</td>
       </tr>
       <tr>
-        <td class="feature">All platforms covered</td>
+        <td class="feature">All platforms</td>
         <td class="gg check">✓ Yes</td>
         <td class="check">✓ Yes</td>
         <td class="cross">Browser only</td>
@@ -609,18 +465,18 @@
         <td class="cross">✗ No</td>
       </tr>
       <tr>
-        <td class="feature">Never blocks banking</td>
-        <td class="gg check">✓ Guaranteed</td>
-        <td class="cross">Partial</td>
-        <td class="check">✓ Yes</td>
-        <td class="check">✓ Yes</td>
-      </tr>
-      <tr>
         <td class="feature">Free to start</td>
         <td class="gg check">✓ Yes</td>
         <td class="cross">✗ Paid only</td>
         <td class="check">✓ Yes</td>
         <td class="cross">Limited trial</td>
+      </tr>
+      <tr>
+        <td class="feature">"Pause" not "quit" framing</td>
+        <td class="gg check">✓ Yes</td>
+        <td class="cross">✗ No</td>
+        <td class="cross">✗ No</td>
+        <td class="cross">✗ No</td>
       </tr>
     </tbody>
   </table>
@@ -631,8 +487,8 @@
   <div class="platforms-inner">
     <div class="platforms-left">
       <div class="section-label">Platform coverage</div>
-      <div class="platforms-title">One account.<br>Every screen.</div>
-      <p class="platforms-sub">GambleGuard works at the network level — not just in a browser. That means every app, every site, every device under one account.</p>
+      <div class="platforms-title">One timeout.<br>Every screen.</div>
+      <p class="platforms-sub">Timeout works at the network level — not just in a browser. One account covers every device you own.</p>
     </div>
     <div class="platforms-grid">
       <div class="platform-pill">📱 iOS</div>
@@ -647,66 +503,86 @@
   </div>
 </section>
 
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <div class="section-title">Start free.<br><em>Upgrade when you're ready.</em></div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tag">Free</div>
+      <div class="pricing-name">Timeout Free</div>
+      <div class="pricing-price">$0 <span>/ forever</span></div>
+      <div class="pricing-sub">No credit card needed</div>
+      <ul class="pricing-features">
+        <li>Chrome extension</li>
+        <li>70+ blocked domains</li>
+        <li>48-hour default cooldown</li>
+        <li>Basic urge counter</li>
+        <li>Streak tracking</li>
+      </ul>
+      <a href="#" class="pricing-btn free">Install Chrome extension</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-tag">Premium</div>
+      <div class="pricing-name">Timeout Pro</div>
+      <div class="pricing-price">$4.99 <span>/ month</span></div>
+      <div class="pricing-sub">or $39.99/year — save 33%</div>
+      <ul class="pricing-features">
+        <li>Everything in Free</li>
+        <li>iOS & Android apps</li>
+        <li>macOS & Windows apps</li>
+        <li>Custom cooldown (1hr–30 days)</li>
+        <li>Full urge analytics & heatmap</li>
+        <li>Cross-platform sync</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#waitlist" class="pricing-btn premium">Join waitlist for Pro</a>
+    </div>
+  </div>
+</section>
+
 <!-- FINAL CTA -->
 <section class="final-cta">
-  <h2 class="final-title">Ready to make it<br><em>genuinely hard</em><br>to give in?</h2>
-  <p class="final-sub">Join the waitlist for mobile apps, or install the Chrome extension right now — free, no account needed.</p>
-  <div class="form-wrap" style="margin: 0 auto 16px;">
-    <input class="email-input" type="email" id="email-input-2" placeholder="your@email.com">
-    <button class="submit-btn" onclick="joinWaitlist2()">Join waitlist</button>
+  <h2 class="final-title">Ready to bet on<br><em>yourself?</em></h2>
+  <p class="final-sub">The best bet you'll ever make is the one you make on yourself.</p>
+  <div class="form-wrap" id="form-2" style="margin: 0 auto 16px;">
+    <input class="email-input" type="email" id="email-2" placeholder="your@email.com">
+    <button class="submit-btn" onclick="joinWaitlist('email-2','success-2','form-2')">Join waitlist</button>
   </div>
-  <div class="success-msg" id="success-msg-2" style="max-width:440px;margin:0 auto 16px;"></div>
-  <p class="form-note">Mobile apps coming soon. Chrome extension available now.</p>
+  <div class="success-msg" id="success-2"></div>
+  <p class="form-note">Mobile apps coming soon. Chrome extension available now — free.</p>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Gamble<span>Guard</span></div>
-  <div>Built for people who want real protection, not just a speed bump.</div>
-  <div>© 2026 GambleGuard</div>
+  <div class="footer-logo">Timeout<span>.bet</span></div>
+  <div>Bet on yourself.</div>
+  <div>© 2026 Timeout.bet</div>
 </footer>
 
 <script>
-// ── Waitlist signup ───────────────────────────────────────────────────────────
-async function joinWaitlist() {
-  const email = document.getElementById('email-input').value.trim();
+async function joinWaitlist(inputId, successId, formId) {
+  const email = document.getElementById(inputId).value.trim();
   if (!email || !email.includes('@')) {
-    document.getElementById('email-input').focus();
+    document.getElementById(inputId).focus();
     return;
   }
-  await submitEmail(email, 'success-msg', 'email-input');
-}
-
-async function joinWaitlist2() {
-  const email = document.getElementById('email-input-2').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('email-input-2').focus();
-    return;
-  }
-  await submitEmail(email, 'success-msg-2', 'email-input-2');
-}
-
-async function submitEmail(email, successId, inputId) {
   const btn = event.target;
   btn.textContent = 'Joining…';
   btn.disabled = true;
 
-  // In production: POST to your API or a form service like Formspree
-  // For now, simulate success after a short delay
   await new Promise(r => setTimeout(r, 800));
 
-  document.querySelector('.form-wrap').style.display = 'none';
-  const successEl = document.getElementById(successId);
-  successEl.textContent = '✓ You\'re on the list. We\'ll be in touch soon.';
-  successEl.style.display = 'block';
+  document.getElementById(formId).style.display = 'none';
+  const s = document.getElementById(successId);
+  s.textContent = '✓ You\'re on the list. We\'ll reach out when mobile launches.';
+  s.style.display = 'block';
 
-  // Store locally as backup
-  const waitlist = JSON.parse(localStorage.getItem('gg_waitlist') || '[]');
+  const waitlist = JSON.parse(localStorage.getItem('timeout_waitlist') || '[]');
   waitlist.push({ email, joined_at: new Date().toISOString() });
-  localStorage.setItem('gg_waitlist', JSON.stringify(waitlist));
+  localStorage.setItem('timeout_waitlist', JSON.stringify(waitlist));
 }
 
-// ── Scroll animations ─────────────────────────────────────────────────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -717,12 +593,11 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.step, .diff-card, .platform-pill').forEach(el => {
+document.querySelectorAll('.step, .dark-card, .platform-pill, .pricing-card').forEach(el => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(16px)';
   observer.observe(el);
 });
 </script>
-
 </body>
 </html>
