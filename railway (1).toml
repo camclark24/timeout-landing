@@ -1,0 +1,5 @@
+[build]
+nixPacks = true
+
+[deploy]
+startCommand = "npx --yes serve . --listen $PORT"
